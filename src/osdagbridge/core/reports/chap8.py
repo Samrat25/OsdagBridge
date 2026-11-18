@@ -1,5 +1,6 @@
 from typing import List
 
+from osdagbridge.core.reports.styles import format_status_badge
 from osdagbridge.core.utils.common import (
     KEY_DESIGN_MODE
 )

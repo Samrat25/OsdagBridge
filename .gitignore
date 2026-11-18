@@ -1,4 +1,10 @@
 # Byte-compiled / optimized / DLL files
+.tinytex/
+generate_test_report.py
+Report_Test.*
+*.aux
+*.toc
+*.out
 */__pycache__/
 *.py[codz]
 *$py.class

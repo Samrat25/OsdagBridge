@@ -3,6 +3,7 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 
 from osdagbridge.core.reports.report_utils import _fig_or_placeholder, _render_value, _tex, get_girder_entries
+from osdagbridge.core.reports.styles import format_status_badge, format_ur
 from osdagbridge.core.utils.common import (
     KEY_CARRIAGEWAY_WIDTH,
     KEY_SD_SECTION_DESIGNATION,
@@ -206,7 +207,7 @@ This section provides a concise summary of the bridge design, key inputs, govern
 \hline
 \textbf{Deck Thickness} & """ + (_render_value(input_dict, KEY_TS_DECK_THICKNESS)) + r""" \\
 \hline
-\textbf{Overall Design Status} & """ + (_tex(overall_design_status)) + r""" \\
+\textbf{Overall Design Status} & """ + format_status_badge(overall_design_status) + r""" \\
 \hline
 \textbf{Governing Check} & """ + gov + r""" \\
 \hline
