@@ -62,9 +62,9 @@ GEOMETRY_CONFIG = {
     "bottom": "28mm",      # Extra clearance for footskip and software default notes
     "left": "20mm",
     "right": "20mm",
-    "headheight": "16pt",
-    "headsep": "12pt",
-    "footskip": "16pt",
+    "headheight": "18pt",
+    "headsep": "14pt",
+    "footskip": "18pt",
 }
 
 def get_geometry_latex() -> str:
@@ -255,31 +255,56 @@ def format_ur(val: Any, threshold: float = 1.0) -> str:
     except (TypeError, ValueError):
         return str(val) if val is not None else "---"
 
-def build_longtable_header(col_spec: str, caption: str, header_rows: str, cont_caption: Optional[str] = None) -> str:
+def build_longtable_header(
+    col_spec: str,
+    caption: str,
+    header_rows: str,
+    cont_caption: Optional[str] = None,
+    num_cols: Optional[int] = None,
+    label: Optional[str] = None,
+) -> str:
     """
     Generate standard longtable structure with repeating headers and footers.
     Includes:
-      - First head with primary caption
+      - First head with primary caption (bold)
       - Subsequent head with continuation caption
       - Intermediate footer indicating continuation
       - Final footer closing the table rule
     """
-    cont_cap_text = cont_caption or (caption + r" \textit{(Continued)}")
+    import re
+    # Clean caption: strip outer \\textbf{...} if already passed
+    clean_caption = caption.strip()
+    if clean_caption.startswith(r"\textbf{") and clean_caption.endswith("}"):
+        clean_caption = clean_caption[8:-1]
+
+    lbl_str = f"\\label{{{label}}}" if label else ""
+    cont_cap_text = (cont_caption or (clean_caption + r" \textit{(Continued)}")).strip()
+
+    if num_cols is not None:
+        c_num = num_cols
+    else:
+        # Safely compute column count by stripping curly braces first
+        spec_no_braces = re.sub(r"\{[^{}]*\}", "", col_spec)
+        c_num = max(spec_no_braces.count('|') - 1, 1) if '|' in spec_no_braces else max(
+            spec_no_braces.count('c') + spec_no_braces.count('l') + spec_no_braces.count('r') + spec_no_braces.count('p'),
+            1
+        )
+
     return (
+        r"\needspace{10\baselineskip}" + "\n"
         r"\begin{longtable}{" + col_spec + r"}" + "\n"
-        r"\caption{\textbf{" + caption + r"}} \\" + "\n"
+        r"\caption{\textbf{" + clean_caption + r"}} " + lbl_str + r" \\" + "\n"
         r"\hline" + "\n"
         + header_rows + "\n"
         r"\hline" + "\n"
         r"\endfirsthead" + "\n\n"
-        r"\multicolumn{" + str(col_spec.count('|') - 1 if '|' in col_spec else col_spec.count('c') + col_spec.count('l') + col_spec.count('r') + col_spec.count('p')) + r"}{l}{\small\textit{" + cont_cap_text + r"}} \\[4pt]" + "\n"
+        r"\multicolumn{" + str(c_num) + r"}{l}{\small\textit{" + cont_cap_text + r"}} \\[4pt]" + "\n"
         r"\hline" + "\n"
         + header_rows + "\n"
         r"\hline" + "\n"
         r"\endhead" + "\n\n"
         r"\hline" + "\n"
-        r"\multicolumn{" + str(col_spec.count('|') - 1 if '|' in col_spec else 3) + r"}{r}{\footnotesize\textit{Continued on next page\dots}} \\" + "\n"
+        r"\multicolumn{" + str(c_num) + r"}{r}{\footnotesize\textit{Continued on next page\dots}} \\" + "\n"
         r"\endfoot" + "\n\n"
-        r"\hline" + "\n"
         r"\endlastfoot" + "\n"
     )
