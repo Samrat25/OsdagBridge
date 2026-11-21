@@ -1,6 +1,29 @@
 from osdagbridge.core.reports.styles import build_longtable_header
 
-def ch7_quantities(input_dict):
+def ch7_quantities(input_dict, fig_paths=None):
+    steel_chart_path = (fig_paths or {}).get("chart_steel_tonnage", "images/chart_steel_tonnage.png")
+    concrete_chart_path = (fig_paths or {}).get("chart_concrete_rebar", "images/chart_concrete_rebar.png")
+
+    charts_tex = r"""
+\vspace{1.5em}
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\linewidth]{""" + steel_chart_path.replace('\\', '/') + r"""}
+\caption{\textbf{Structural Steel Tonnage Breakdown}}
+\label{fig:steel-tonnage}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\linewidth]{""" + concrete_chart_path.replace('\\', '/') + r"""}
+\caption{\textbf{Concrete Volume vs. Rebar Weight}}
+\label{fig:concrete-rebar}
+\end{minipage}
+\end{figure}
+"""
+
     return r"""
 \chapter{Material Take-off \& Quantity Summary}
 \label{ch:material-takeoff}
@@ -30,6 +53,6 @@ def ch7_quantities(input_dict):
 6 & Crash Barrier & """ + str(input_dict.get("crash_barrier_vol_formula", "N.A.")) + r""" & """ + str(input_dict.get("crash_barrier_qty", "N.A.")) + r""" & """ + str(input_dict.get("crash_barrier_vol_total", "N.A.")) + r""" & """ + str(input_dict.get("crash_barrier_wt_single", "N.A.")) + r""" & """ + str(input_dict.get("crash_barrier_wt_total", "N.A.")) + r""" \\
 \hline
 \end{longtable}
-"""
+""" + charts_tex
 
 
