@@ -146,7 +146,7 @@ from osdagbridge.core.reports.styles import build_longtable_header, format_statu
 
 if TYPE_CHECKING:
     pass
-def ch5_design_checks(checks_data, bridge) -> str:
+def ch5_design_checks(checks_data, bridge, fig_paths=None) -> str:
     """Chapter 5 — Design Checks.
 
     Parameters
@@ -155,6 +155,8 @@ def ch5_design_checks(checks_data, bridge) -> str:
         Raw checks payload (currently unused; data is sourced from bridge).
     bridge : ReportDataBridge
         Provides input_dict, output_dict, and helper methods.
+    fig_paths : dict, optional
+        Dictionary mapping figure names to relative file paths.
     """
     girder_entries = get_girder_entries(bridge.input_dict)
     if not girder_entries:
@@ -1069,6 +1071,20 @@ Fatigue Shear Resistance, $Q_r$ & IRC 22 Table 8 ($\phi d$, $N_{sc}$) & """
     ]
     t522_content = "\n".join(_t522)
 
+    ur_chart_tex = ""
+    ur_chart_path = (fig_paths or {}).get("chart_ur_summary", "images/chart_ur_summary.png")
+    if ur_chart_path:
+        ur_chart_tex = r"""
+\vspace{0.5em}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{""" + ur_chart_path.replace('\\', '/') + r"""}
+\caption{\textbf{Component Utilization Ratio Summary}}
+\label{fig:ur-summary-chart}
+\end{figure}
+\vspace{0.5em}
+"""
+
     return r"""
 \chapter{Design Checks}
 
@@ -1512,7 +1528,7 @@ End diaphragms at the supports transfer transverse loads to the bearings, restra
 \section{Overall Design Check Summary}
 \label{sec:overall-summary}
 % ===========================
-
+""" + ur_chart_tex + r"""
 \vspace{1em}
 """ + build_longtable_header(
     r"|C{3.4cm}|L{4.5cm}|C{2.3cm}|C{2.3cm}|>{\centering\arraybackslash}p{1.6cm}|",

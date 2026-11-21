@@ -857,6 +857,27 @@ def generate_report(payload, request):
             bridge = ReportDataBridge(payload.output_dict, payload.inputs, payload)
             span_m = float(payload.inputs.get(KEY_SPAN, 0) or 0)
 
+            # ── Generate Report Charts (UR summary, Steel tonnage, Concrete vs Rebar) ──
+            try:
+                from osdagbridge.core.reports.charts import (
+                    generate_ur_summary_chart,
+                    generate_steel_tonnage_chart,
+                    generate_concrete_rebar_chart,
+                )
+                ur_chart_file = os.path.join(tmp_images, 'chart_ur_summary.png')
+                if generate_ur_summary_chart(bridge, ur_chart_file):
+                    fig_paths['chart_ur_summary'] = 'images/chart_ur_summary.png'
+
+                steel_chart_file = os.path.join(tmp_images, 'chart_steel_tonnage.png')
+                if generate_steel_tonnage_chart(payload.inputs, steel_chart_file):
+                    fig_paths['chart_steel_tonnage'] = 'images/chart_steel_tonnage.png'
+
+                concrete_chart_file = os.path.join(tmp_images, 'chart_concrete_rebar.png')
+                if generate_concrete_rebar_chart(payload.inputs, concrete_chart_file):
+                    fig_paths['chart_concrete_rebar'] = 'images/chart_concrete_rebar.png'
+            except Exception as _ce:
+                logger.warning(f"Could not generate report charts: {_ce}")
+
             doc_parts = []
             doc_parts.append(preamble(payload.metadata.project_name, payload.metadata.job_number, payload.metadata.report_date, payload.metadata.subtitle or 'Rev 0'))
             doc_parts.append(title_page(payload.metadata, osdag_logo_latex, org_logo_latex))
@@ -878,11 +899,11 @@ def generate_report(payload, request):
             if 'analysis' in secs:
                 doc_parts.append(ch4_analysis(payload.analysis_summary, fig_paths, bridge, span_m))
             if 'design_checks' in secs:
-                doc_parts.append(ch5_design_checks(payload.design_checks, bridge))
+                doc_parts.append(ch5_design_checks(payload.design_checks, bridge, fig_paths))
             if 'drawings' in secs and payload.options.include_figures:
                 doc_parts.append(ch6_drawings(fig_paths))
 
-            doc_parts.append(ch7_quantities(payload.inputs))
+            doc_parts.append(ch7_quantities(payload.inputs, fig_paths))
 
             mode = str(payload.inputs.get(KEY_DESIGN_MODE, "Optimized")).strip().lower()
             is_custom = mode in {"custom", "customized"}

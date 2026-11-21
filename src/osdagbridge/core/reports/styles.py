@@ -18,6 +18,8 @@ import os
 # Canonical Hex Colors
 COLOR_OSDAG_GREEN   = "#91B014"   # Primary brand color (Osdag Green)
 COLOR_DARK_SLATE    = "#2C3E50"   # Secondary structural dark
+COLOR_PRIMARY       = "#2C3E50"   # Alias for structural primary
+COLOR_SECONDARY     = "#91B014"   # Alias for brand secondary
 COLOR_LIGHT_BG      = "#F8F9FA"   # Very light gray for backgrounds
 COLOR_TABLE_HEADER  = "#EAECEE"   # Neutral light gray for table headers
 COLOR_TABLE_ALT     = "#F4F6F7"   # Alternating row shading
@@ -27,6 +29,7 @@ COLOR_PASS          = "#1E8449"   # Clean pass green (WCAG AA accessible)
 COLOR_FAIL          = "#C0392B"   # Clear fail red
 COLOR_WARNING       = "#D35400"   # Warning orange
 COLOR_INFO_BLUE     = "#2980B9"   # Info blue
+COLOR_ACCENT        = "#2980B9"   # Alias for info / accent blue
 
 # Matplotlib chart color sequence
 CHART_PALETTE = [
@@ -202,6 +205,9 @@ CHART_CONFIG = {
 
 def setup_matplotlib_style():
     """Apply consistent styling rules to matplotlib for all report figures."""
+    import os
+    import tempfile
+    os.environ.setdefault('MPLCONFIGDIR', os.path.join(tempfile.gettempdir(), 'matplotlib_osdag'))
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
