@@ -132,6 +132,50 @@ npm start
 
 ---
 
+## Report Generation & Architecture
+
+OsdagBridge features an automated, code-compliant PDF design report generator built on top of PyLaTeX and LaTeX (TinyTeX / TeX Live). The report compiles engineering design outputs, load combinations, code checks, and structural drawings into a publication-ready PDF document adhering to Indian Standards (IRC 5, IRC 6, IRC 22, IRC 24, IS 800, IS 456).
+
+### Headless Report Generation
+
+To regenerate design reports directly from the terminal without launching the GUI (e.g., in CI or server environments):
+
+```bash
+# Generate report using default test configuration (outputs Report_After.pdf and Report_After.tex)
+python generate_test_report.py Report_After
+```
+
+The script automatically sets up the environment, mocks finite-element dependencies if not installed locally, applies bridge sizing and IRC loading rules, generates all data-driven visual charts, and compiles the document using the portable TinyTeX distribution.
+
+### Desktop GUI Report Generation
+
+To generate reports interactively through the desktop application:
+
+```bash
+cd src
+python -m osdagbridge.desktop
+```
+
+1. Navigate to the **Plate Girder** bridge design window.
+2. Configure parameters or keep default geometric and material properties.
+3. In the Additional Inputs dialog, customize **Loading** parameters (select desired IRC vehicle classes, impact factors, and footpath configurations).
+4. Click **Design** to perform grillage analysis and design code checks.
+5. Click **Generate Report** to launch the report options dialog, select desired chapters, and click **Save PDF**.
+
+### Key Report Refactoring Highlights
+
+- **Centralized Style Architecture (`styles.py`)**: All layout rules, page geometry (`top=22mm, bottom=28mm, footskip=18pt`), margins, color palettes (`#91B014`, `#2C3E50`, `#C0392B`, `#1E8449`), table row spacing, header/footer pagestyles (`fancyhdr`), and Matplotlib figure configurations are centralized in a single module.
+- **Repeating Headers on Multi-Page Tables**: All tables spanning multiple pages are standardized with LaTeX `longtable` using `\endfirsthead`, `\endhead`, `\endfoot`, and `\endlastfoot`, ensuring column titles repeat across page boundaries with clear `(Continued)` indicators.
+- **Footer Collision Prevention**: Resolved multi-line row bleeding into footers (such as girder G4 check rows) by adjusting page geometry (`bottom=28mm`, `footskip=18pt`), binding multi-row records with `\\*[6pt]`, and applying `\needspace` buffers.
+- **Structured Chapter 3 Loads**: Split combined loads into two dedicated tables:
+  1. *Live Loads (LL)*: Tabulates selected vehicle classes, dynamic impact factors $(1 + i_m)$, longitudinal braking forces (kN), and tangent centrifugal forces (0.00 kN) matching user-selected UI inputs.
+  2. *Footway & Pedestrian Live Load*: Details footpath configuration, width, thickness, pressure mode, and design pedestrian load ($4.905\text{ kN/m}^2$ per IRC 6 Cl. 206.1) with a dedicated Unit column.
+- **Dynamic Data-Driven Visual Charts (`charts.py`)**:
+  - *Section 5.5 Overall Design Check Summary*: Embedded high-resolution Matplotlib bar chart of governing Utilization Ratios across Girders, Deck Slab, Cross Bracing, and End Diaphragms, with a red dashed line at $UR = 1.0$ and visual fail distinctions.
+  - *Chapter 7 Material Take-off*: Embedded dual charts showing structural steel tonnage breakdown (MT) and concrete volume ($m^3$) vs. reinforcement steel weight (MT).
+
+---
+
 ## Testing
 
 Run the complete test suite:
