@@ -1,3 +1,6 @@
+from osdagbridge.core.reports.styles import COLOR_OSDAG_GREEN, COLOR_PRIMARY
+
+
 def ch6_drawings(fig_paths):
     """Chapter 6 – Drawings and Visualizations.
 

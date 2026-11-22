@@ -1,3 +1,6 @@
+from osdagbridge.core.reports.styles import COLOR_OSDAG_GREEN, COLOR_PRIMARY
+
+
 def references():
     return r"""
 \chapter*{References}

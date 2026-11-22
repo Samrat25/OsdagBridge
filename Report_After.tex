@@ -57,6 +57,7 @@
 \definecolor{osdagPass}{HTML}{1E8449}
 \definecolor{osdagFail}{HTML}{C0392B}
 \definecolor{osdagWarn}{HTML}{D35400}
+\definecolor{osdagBlue}{HTML}{2980B9}
 \definecolor{tableHeaderBg}{HTML}{EAECEE}
 \definecolor{tableAltBg}{HTML}{F4F6F7}
 
@@ -327,23 +328,41 @@ This section records all project metadata as entered by the designer.
 \section{Project and Design Team Details}
 \label{sec:project-details}
 
-\begin{tabular}{|L{5.5cm}|L{8.5cm}|}
+\needspace{10\baselineskip}
+\begin{longtable}{|L{5.5cm}|L{8.5cm}|}
+\caption{\textbf{Project and Design Team Details}} \label{tab:project-details} \\
 \hline
-\textbf{Project Name} & Short-Span Steel Girder Bridge \\
+\textbf{Parameter} & \textbf{Details} \\
 \hline
-\textbf{Project Location} & Mumbai, MH \\
+\endfirsthead
+
+\multicolumn{2}{l}{\small\textit{Project and Design Team Details \textit{(Continued)}}} \\[4pt]
 \hline
-\textbf{Designer} & Osdag Team \\
+\textbf{Parameter} & \textbf{Details} \\
 \hline
-\textbf{Reviewer} &  \\
+\endhead
+
 \hline
-\textbf{Organization} & IIT Bombay \\
+\multicolumn{2}{r}{\footnotesize\textit{Continued on next page\dots}} \\
+\endfoot
+
+\endlastfoot
+
+\textnormal{Project Name} & Short-Span Steel Girder Bridge \\
 \hline
-\textbf{Client} & Ministry of Road Transport \\
+\textnormal{Project Location} & Mumbai, MH \\
 \hline
-\textbf{Software Version} & OsdagBridge \\
+\textnormal{Designer} & Osdag Team \\
 \hline
-\end{tabular}
+\textnormal{Reviewer} &  \\
+\hline
+\textnormal{Organization} & IIT Bombay \\
+\hline
+\textnormal{Client} & Ministry of Road Transport \\
+\hline
+\textnormal{Software Version} & OsdagBridge \\
+\hline
+\end{longtable}
 
 
 \section{Applicable Codes and Standards}
@@ -966,7 +985,7 @@ A grillage model was used for structural analysis. The deck is idealized as a gr
 \vspace{1em}
 \begingroup
 \footnotesize
-\setlength{\tabcolsep}{3pt}
+\setlength{\tabcolsep}{3.5pt}
 \renewcommand{\arraystretch}{1.25}
 
 \begin{longtable}{|

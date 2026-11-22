@@ -1,6 +1,6 @@
 from typing import List
 
-from osdagbridge.core.reports.styles import format_status_badge
+from osdagbridge.core.reports.styles import format_status_badge, TABLE_CONFIG
 from osdagbridge.core.utils.common import (
     KEY_DESIGN_MODE
 )
@@ -24,10 +24,10 @@ def ch8_design_log(log_entries: List[str], input_dict: dict) -> str:
                 upper = line.upper()
                 if 'WARNING' in upper:
                     lines_tex.append(
-                        rf'\textcolor{{blue}}{{{escaped}}}\\')
+                        rf'\textcolor{{osdagBlue}}{{{escaped}}}\\')
                 elif 'ERROR' in upper:
                     lines_tex.append(
-                        rf'\textcolor{{red}}{{{escaped}}}\\')
+                        rf'\textcolor{{osdagFail}}{{{escaped}}}\\')
                 elif 'INFO' in upper:
                     lines_tex.append(
                         rf'\textcolor{{osdagGreen}}{{{escaped}}}\\')
@@ -57,7 +57,7 @@ form the basis of all design calculations in this software.
 \vspace{0.5cm}
 
 \begingroup
-\setlength{\tabcolsep}{3.5pt}
+\setlength{\tabcolsep}{""" + TABLE_CONFIG['tabcolsep_compact'] + r"""}
 \begin{table}[H]
 \caption{\textbf{IRC Codes}}
 \begin{tabular}{|c|c|p{13cm}|}
@@ -80,7 +80,7 @@ IRC SP 114 & 2018 & Seismic Design of Road Bridges \\
 \end{table}
 
 \begingroup
-\setlength{\tabcolsep}{3.5pt}
+\setlength{\tabcolsep}{""" + TABLE_CONFIG['tabcolsep_compact'] + r"""}
 \begin{table}[H]
 \caption{\textbf{IS Codes}}
 \begin{tabular}{|c|c|p{13cm}|}

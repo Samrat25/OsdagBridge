@@ -50,6 +50,7 @@ LATEX_COLOR_DEFS = r"""
 \definecolor{osdagPass}{HTML}{1E8449}
 \definecolor{osdagFail}{HTML}{C0392B}
 \definecolor{osdagWarn}{HTML}{D35400}
+\definecolor{osdagBlue}{HTML}{2980B9}
 \definecolor{tableHeaderBg}{HTML}{EAECEE}
 \definecolor{tableAltBg}{HTML}{F4F6F7}
 """
@@ -107,7 +108,9 @@ def apply_geometry(doc) -> None:
 
 TABLE_CONFIG = {
     "tabcolsep": "5pt",           # Horizontal padding between columns
+    "tabcolsep_compact": "3.5pt", # Padding for dense multi-column analysis tables
     "arraystretch": "1.18",       # Vertical row expansion factor
+    "arraystretch_compact": "1.25", # Vertical expansion for compact tables
     "extrarowheight": "0.8pt",    # Extra space above horizontal rules
     "arrayrulewidth": "0.5pt",    # Outline border width
     "lt_pre": "0pt",              # Space before longtable

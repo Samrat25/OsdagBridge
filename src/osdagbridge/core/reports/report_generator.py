@@ -125,6 +125,7 @@ from .styles import (
     LATEX_COLOR_DEFS,
     get_fancyhdr_latex,
     setup_matplotlib_style,
+    format_status_badge,
 )
 from .executive_summary import executive_summary
 from .chap1 import ch1_project_info
@@ -547,8 +548,8 @@ class ReportDataBridge:
             if val is not None:
                 ur = float(val)
                 if ur <= 1.0:
-                    return r"\textcolor{black}{PASS}"
-                return r"\textcolor{red}{FAIL}"
+                    return format_status_badge("PASS")
+                return format_status_badge("FAIL")
         except (TypeError, ValueError):
             pass
         return ""
